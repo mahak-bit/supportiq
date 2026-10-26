@@ -1,0 +1,79 @@
+{
+  // Open this file in VS Code (File > Open Workspace from File) to get the three-root layout.
+  "folders": [
+    { "name": "SupportIQ (root)", "path": "." },
+    { "name": "backend · FastAPI", "path": "backend" },
+    { "name": "frontend · Next.js", "path": "frontend" }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/.next": true,
+      "**/.venv": true,
+      "**/__pycache__": true,
+      "**/.pytest_cache": true,
+      "**/*.tsbuildinfo": true
+    },
+    "search.exclude": { "**/node_modules": true, "**/.venv": true, "**/.next": true, "**/data": true },
+    "python.defaultInterpreterPath": "${workspaceFolder:backend · FastAPI}/.venv/Scripts/python.exe",
+    "python.testing.pytestEnabled": true,
+    "python.testing.cwd": "${workspaceFolder:backend · FastAPI}",
+    "typescript.tsdk": "frontend/node_modules/typescript/lib",
+    "editor.formatOnSave": false
+  },
+  "extensions": {
+    "recommendations": ["ms-python.python", "bradlc.vscode-tailwindcss", "vitest.explorer"]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Backend: FastAPI (uvicorn)",
+        "type": "debugpy",
+        "request": "launch",
+        "module": "uvicorn",
+        "args": ["app.main:app", "--port", "8100", "--reload"],
+        "cwd": "${workspaceFolder:backend · FastAPI}",
+        "python": "${workspaceFolder:backend · FastAPI}/.venv/Scripts/python.exe"
+      }
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "backend: run",
+        "type": "shell",
+        "command": ".venv/Scripts/python -m uvicorn app.main:app --port 8100 --reload",
+        "options": { "cwd": "${workspaceFolder:backend · FastAPI}" },
+        "isBackground": true,
+        "problemMatcher": []
+      },
+      {
+        "label": "frontend: dev",
+        "type": "shell",
+        "command": "npm run dev -- -p 3100",
+        "options": { "cwd": "${workspaceFolder:frontend · Next.js}", "env": { "BACKEND_URL": "http://127.0.0.1:8100" } },
+        "isBackground": true,
+        "problemMatcher": []
+      },
+      { "label": "dev: both", "dependsOn": ["backend: run", "frontend: dev"], "problemMatcher": [] },
+      {
+        "label": "test: backend",
+        "type": "shell",
+        "command": ".venv/Scripts/python -m pytest",
+        "options": { "cwd": "${workspaceFolder:backend · FastAPI}" },
+        "group": "test",
+        "problemMatcher": []
+      },
+      {
+        "label": "test: frontend",
+        "type": "shell",
+        "command": "npm test && npm run lint",
+        "options": { "cwd": "${workspaceFolder:frontend · Next.js}" },
+        "group": "test",
+        "problemMatcher": []
+      }
+    ]
+  }
+}

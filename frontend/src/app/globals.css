@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+/* SupportIQ design tokens.
+   Ivory paper, blue-black ink, one cobalt accent. Status hues are muted and only used
+   where they carry meaning (validation, escalation, approval). */
+@theme {
+  --color-ivory: #f6f3ea;
+  --color-ivory-deep: #efeadd;
+  --color-paper: #fffdf8;
+  --color-ink: #171a2c;
+  --color-ink-soft: #50566e;
+  --color-ink-faint: #858a9e;
+  --color-rule: #e2dccd;
+  --color-rule-strong: #cfc7b4;
+  --color-cobalt: #2448d8;
+  --color-cobalt-deep: #1a34a6;
+  --color-cobalt-wash: #e8ecfb;
+  --color-moss: #2f7350;
+  --color-moss-wash: #e4f0e8;
+  --color-amber: #9a6512;
+  --color-amber-wash: #f7ecd6;
+  --color-brick: #a83e2a;
+  --color-brick-wash: #f6e3dd;
+
+  --font-serif: var(--font-source-serif), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-control: 7px;
+  --radius-panel: 12px;
+
+  --shadow-lift: 0 1px 0 rgb(23 26 44 / 0.04), 0 8px 24px -12px rgb(23 26 44 / 0.18);
+  --shadow-float: 0 1px 0 rgb(23 26 44 / 0.05), 0 24px 48px -24px rgb(23 26 44 / 0.35);
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--color-ivory);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-cobalt-wash);
+  color: var(--color-cobalt-deep);
+}
+
+/* One consistent, highly visible focus treatment for every interactive element. */
+:focus-visible {
+  outline: 2px solid var(--color-cobalt);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.font-display {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  letter-spacing: -0.015em;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Paper grain: a barely-there texture so large ivory areas don't feel flat. */
+.grain {
+  background-image: radial-gradient(rgb(23 26 44 / 0.035) 0.6px, transparent 0.6px);
+  background-size: 3px 3px;
+}
+
+.scroll-quiet {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-rule-strong) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

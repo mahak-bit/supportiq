@@ -1,0 +1,15 @@
+# Runtime dependencies (also what Vercel installs). Dev/test/server extras: requirements-dev.txt
+fastapi==0.115.12
+pydantic==2.11.4
+pydantic-settings==2.9.1
+sqlalchemy==2.0.40
+alembic==1.15.2
+python-multipart==0.0.20
+pyjwt==2.10.1
+pymupdf==1.25.5
+fastembed==0.7.0
+faiss-cpu==1.11.0
+numpy>=1.26,<2.3
+langgraph==0.4.1
+google-genai==1.14.0
+httpx==0.28.1

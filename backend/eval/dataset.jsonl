@@ -1,0 +1,25 @@
+{"id": "q01", "question": "How long do customers have to return an unused item?", "answerable": true, "expected_section": "RR-1 Standard return window", "must_include": ["30 days"]}
+{"id": "q02", "question": "Can final sale items be returned?", "answerable": true, "expected_section": "RR-2 Final-sale items", "must_include": ["final sale"]}
+{"id": "q03", "question": "A plate arrived broken. How long does the customer have to report it?", "answerable": true, "expected_section": "RR-3 Damaged or defective on arrival", "must_include": ["14 days"]}
+{"id": "q04", "question": "Do customers pay return shipping when an item is damaged?", "answerable": true, "expected_section": "RR-3 Damaged or defective on arrival", "must_include": ["never charged return shipping"]}
+{"id": "q05", "question": "Can an order be cancelled after it has shipped?", "answerable": true, "expected_section": "RR-4 Cancelling an order", "must_include": ["shipped"]}
+{"id": "q06", "question": "When do we open a lost package investigation?", "answerable": true, "expected_section": "RR-5 Orders that have not arrived", "must_include": ["14 days"]}
+{"id": "q07", "question": "How long does it take for a refund to show up on the customer's bank statement?", "answerable": true, "expected_section": "RR-6 How refunds are issued", "must_include": ["5 to 7 business days"]}
+{"id": "q08", "question": "What is the maximum refund a support agent can approve without a team lead?", "answerable": true, "expected_section": "RR-7 Approval limits", "must_include": ["$300"]}
+{"id": "q09", "question": "What return window do Halden Plus members get?", "answerable": true, "expected_section": "RR-8 Halden Plus members", "must_include": ["45 days"]}
+{"id": "q10", "question": "How much is the return shipping fee for change-of-mind returns?", "answerable": true, "expected_section": "Return shipping", "must_include": ["$7.95"]}
+{"id": "q11", "question": "How long does standard shipping take within the United States?", "answerable": true, "expected_section": "Delivery estimates", "must_include": ["3 to 5 business days"]}
+{"id": "q12", "question": "Which countries do you ship to?", "answerable": true, "expected_section": "International shipping", "must_include": ["Canada"]}
+{"id": "q13", "question": "Can a customer change the delivery address after the order ships?", "answerable": true, "expected_section": "Changing a delivery address", "must_include": ["carrier"]}
+{"id": "q14", "question": "What bulb does the Lumen brass lamp take and what wattage is safe?", "answerable": true, "expected_section": "Lumen Brass Table Lamp", "must_include": ["E26"]}
+{"id": "q15", "question": "How should I wash the Fjord wool throw?", "answerable": true, "expected_section": "Fjord Wool Throw", "must_include": ["Hand wash cold"]}
+{"id": "q16", "question": "Is the Tidal stoneware oven safe?", "answerable": true, "expected_section": "Tidal Stoneware Dinner Set", "must_include": ["not oven safe"]}
+{"id": "q17", "question": "Customer sees two charges for one order. What should I tell them?", "answerable": true, "expected_section": "Duplicate or pending charges", "must_include": ["3 to 5 business days"]}
+{"id": "q18", "question": "Do we offer price adjustments if an item goes on sale?", "answerable": true, "expected_section": "Price adjustments", "must_include": ["14 days"]}
+{"id": "q19", "question": "What should agents do when a customer reports a product caught fire?", "answerable": true, "expected_section": "Safety reports", "must_include": ["stop using"]}
+{"id": "q20", "question": "Can support agents change a customer's email address for them?", "answerable": true, "expected_section": "Account access", "must_include": ["cannot change"]}
+{"id": "q21", "question": "Do you offer a student discount?", "answerable": false}
+{"id": "q22", "question": "What are the opening hours of your physical store in Berlin?", "answerable": false}
+{"id": "q23", "question": "Can I pay with cryptocurrency like Bitcoin?", "answerable": false}
+{"id": "q24", "question": "Do you sell replacement parts for the Morrow table legs separately?", "answerable": false}
+{"id": "q25", "question": "Is there a loyalty points programme that earns cashback?", "answerable": false}
