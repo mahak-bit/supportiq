@@ -16,6 +16,16 @@ from app.security import current_user
 router = APIRouter(prefix="/api", tags=["system"])
 
 
+def _storage(dialect: str, url: str) -> dict:
+    if dialect != "sqlite":
+        return {"dialect": dialect, "persistent": True, "note": "External database via DATABASE_URL."}
+    if ":memory:" in url or "/tmp/" in url:
+        # Serverless hosts (e.g. Vercel) only offer temporary disk: data resets on cold starts.
+        return {"dialect": dialect, "persistent": False,
+                "note": "SQLite in temporary storage: the demo resets to its seeded state when the server restarts."}
+    return {"dialect": dialect, "persistent": True, "note": "SQLite file on local disk."}
+
+
 @router.get("/health")
 def health() -> dict:
     return {"status": "ok"}
@@ -51,11 +61,7 @@ def system_status(db: Session = Depends(get_db), _: User = Depends(current_user)
             "chunk_size": s.chunk_size,
             "chunk_overlap": s.chunk_overlap,
         },
-        "storage": {
-            "dialect": dialect,
-            "persistent": dialect != "sqlite" or ":memory:" not in s.database_url,
-            "note": "SQLite file on local disk." if dialect == "sqlite" else "External database via DATABASE_URL.",
-        },
+        "storage": _storage(dialect, s.database_url),
         "limits": {"max_upload_mb": s.max_upload_mb, "ai_requests_per_minute": s.ai_rate_limit_per_minute,
                    "refund_lead_approval_threshold": s.refund_lead_approval_threshold_cents / 100},
         "counts": {

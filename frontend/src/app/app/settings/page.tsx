@@ -85,6 +85,7 @@ export default function SettingsPage() {
             <Card title="Storage">
               <Row k="Database" v={s.storage.dialect} />
               <Row k="Where" v={s.storage.note} />
+              <Row k="Survives restarts" v={s.storage.persistent ? "Yes" : "No: changes reset to the seeded demo"} />
               <Row k="Records" v={`${s.counts.tickets} tickets, ${s.counts.documents} documents, ${s.counts.chunks} passages`} />
               <Row k="Upload limit" v={`${s.limits.max_upload_mb} MB per file`} />
               <Row k="AI requests" v={`${s.limits.ai_requests_per_minute} per minute per user`} />

@@ -20,6 +20,16 @@ It's a full-stack portfolio project covering three disciplines:
 
 > All customers, orders and tickets are **synthetic**. The demo store, *Halden & Co.*, is fictional.
 
+## Live demo
+
+**https://supportiq-self.vercel.app**: choose *Open the demo workspace*, then continue as the agent or the team lead.
+
+It runs on Vercel: a Next.js project, plus a FastAPI project at `supportiq-api-mahakj532-8125s-projects.vercel.app` behind the Next proxy. Things to know:
+
+- **No language model is configured**, so drafts use the labelled extractive mode. Add `GEMINI_API_KEY` to the `supportiq-api` project's environment variables and redeploy to enable generated replies.
+- **The demo resets.** Vercel functions have no persistent disk, so the SQLite database lives in temporary storage. Each new server instance starts from the seeded demo, so uploads, approvals and agent runs disappear when an instance is recycled or a request lands on a different one. For durable data, set `DATABASE_URL` to a hosted PostgreSQL.
+- **The first request after idle is slow** (a cold start): the server migrates, seeds and loads the embedding model.
+
 
 ---
 
@@ -229,5 +239,5 @@ Extractive mode quotes one or two sentences, so it misses answers that span sent
 | SQLite persistence with Alembic migrations | Implemented and tested |
 | PostgreSQL | Supported by configuration, **not tested** |
 | Sending email / issuing refunds | **Intentionally not implemented.** Approved replies are recorded as `simulated`; refund approvals are recorded for a payment system |
-| Docker image / cloud deployment | Dockerfile written, **not built or deployed** |
+| Cloud deployment | **Live on Vercel** (frontend + FastAPI), with temporary SQLite storage that resets. Dockerfile written but **not built** |
 | Browser check | Key flows exercised in headless Edge (landing, login, agent run, upload and ask, lead escalation) at desktop, tablet and mobile widths |
