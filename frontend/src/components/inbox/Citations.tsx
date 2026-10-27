@@ -14,37 +14,37 @@ export function CitationList({ citations }: { citations: Citation[] }) {
       {citations.map((c, i) => {
         const isOpen = open === c.id;
         return (
-          <li key={c.id} className="rounded-[9px] border border-rule bg-paper">
+          <li key={c.id} className="rounded-[9px] border border-line bg-surface">
             <button
               type="button"
               aria-expanded={isOpen}
               onClick={() => setOpen(isOpen ? null : c.id)}
               className="flex w-full items-start gap-2.5 px-3 py-2.5 text-left"
             >
-              <span className="tabular mt-px grid size-5 shrink-0 place-items-center rounded-full bg-cobalt-wash text-[11px] font-semibold text-cobalt-deep">{i + 1}</span>
+              <span className="tabular mt-px grid size-5 shrink-0 place-items-center rounded-full bg-accent-wash text-[11px] font-semibold text-accent-bright">{i + 1}</span>
               <span className="min-w-0 flex-1">
                 {c.kind === "passage" ? (
                   <>
-                    <span className="flex items-center gap-1.5 text-[13px] font-medium text-ink">
-                      <FileText className="size-3.5 shrink-0 text-ink-faint" aria-hidden />
+                    <span className="flex items-center gap-1.5 text-[13px] font-medium text-fg">
+                      <FileText className="size-3.5 shrink-0 text-fg-faint" aria-hidden />
                       <span className="truncate">{c.document_title}</span>
                     </span>
-                    <span className="block truncate text-[12.5px] text-ink-soft">
+                    <span className="block truncate text-[12.5px] text-fg-soft">
                       {c.section || "Body"}{c.page ? `, page ${c.page}` : ""}. Match {Math.round(c.score * 100)}%. {c.id}
                     </span>
                   </>
                 ) : (
                   <>
-                    <span className="flex items-center gap-1.5 text-[13px] font-medium text-ink">
-                      <Database className="size-3.5 shrink-0 text-ink-faint" aria-hidden /> {c.label}
+                    <span className="flex items-center gap-1.5 text-[13px] font-medium text-fg">
+                      <Database className="size-3.5 shrink-0 text-fg-faint" aria-hidden /> {c.label}
                     </span>
-                    <span className="block text-[12.5px] text-ink-soft">Verified by a tool call ({c.id})</span>
+                    <span className="block text-[12.5px] text-fg-soft">Verified by a tool call ({c.id})</span>
                   </>
                 )}
               </span>
             </button>
             {isOpen && (
-              <blockquote className="mx-3 mb-3 border-l-2 border-cobalt/50 pl-3 text-[13px] leading-relaxed whitespace-pre-line text-ink-soft">
+              <blockquote className="mx-3 mb-3 border-l-2 border-accent/50 pl-3 text-[13px] leading-relaxed whitespace-pre-line text-fg-soft">
                 {c.excerpt}
               </blockquote>
             )}
@@ -66,7 +66,7 @@ export function ValidationReport({ validation, insufficient }: { validation: Val
   ];
   if (insufficient) {
     return (
-      <div className="flex gap-2.5 rounded-[9px] border border-amber/30 bg-amber-wash/70 px-3 py-2.5 text-[13px] text-ink">
+      <div className="flex gap-2.5 rounded-[9px] border border-amber/30 bg-amber-wash/70 px-3 py-2.5 text-[13px] text-fg">
         <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber" aria-hidden />
         <p>The knowledge base doesn’t cover this, so the draft is a holding reply. Consider escalating or adding a document.</p>
       </div>
@@ -74,12 +74,12 @@ export function ValidationReport({ validation, insufficient }: { validation: Val
   }
   return (
     <div className={clsx("rounded-[9px] border px-3 py-2.5 text-[13px]", v.passed ? "border-moss/25 bg-moss-wash/60" : "border-brick/25 bg-brick-wash/60")}>
-      <p className="flex items-center gap-2 font-medium text-ink">
+      <p className="flex items-center gap-2 font-medium text-fg">
         {v.passed ? <BadgeCheck className="size-4 text-moss" aria-hidden /> : <AlertTriangle className="size-4 text-brick" aria-hidden />}
         {v.passed ? "Every claim traces to a retrieved source or verified record." : "Citation check found problems."}
       </p>
       {issues.length > 0 && (
-        <ul className="mt-1.5 list-disc space-y-0.5 pl-6 text-ink-soft">
+        <ul className="mt-1.5 list-disc space-y-0.5 pl-6 text-fg-soft">
           {issues.map((i) => <li key={i}>{i}</li>)}
         </ul>
       )}

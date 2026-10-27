@@ -78,7 +78,7 @@ export function Inbox() {
 
   return (
     <div className="flex h-full min-h-0">
-      <div className={clsx("w-full shrink-0 border-r border-rule bg-ivory md:w-[340px] lg:w-[360px]", selected !== null && "hidden md:block")}>
+      <div className={clsx("w-full shrink-0 border-r border-line bg-surface/50 md:w-[340px] lg:w-[360px]", selected !== null && "hidden md:block")}>
         <TicketList
           ref={searchRef}
           data={list.data}
@@ -91,7 +91,7 @@ export function Inbox() {
           onSelect={select}
         />
       </div>
-      <div className={clsx("min-w-0 flex-1 bg-ivory", selected === null && "hidden md:block")}>
+      <div className={clsx("min-w-0 flex-1 bg-canvas", selected === null && "hidden md:block")}>
         {selected !== null ? (
           <TicketWorkspace key={selected} id={selected} onBack={() => select(null)} onListChanged={() => void list.reload()} />
         ) : (
@@ -107,7 +107,7 @@ export function Inbox() {
       <Dialog open={help} onClose={() => setHelp(false)} title="Keyboard shortcuts">
         <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2.5 text-[14px]">
           {[["/", "Search tickets"], ["j / k", "Next / previous ticket"], ["r", "Run the agent on the open ticket"], ["e", "Escalate the open ticket"], ["Esc", "Leave a text field or close a dialog"], ["?", "Show this list"]].map(([k, v]) => (
-            <div key={k} className="contents"><dt><Kbd>{k}</Kbd></dt><dd className="text-ink-soft">{v}</dd></div>
+            <div key={k} className="contents"><dt><Kbd>{k}</Kbd></dt><dd className="text-fg-soft">{v}</dd></div>
           ))}
         </dl>
       </Dialog>

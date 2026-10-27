@@ -45,19 +45,19 @@ export function LoginForm() {
               setEmail(d.email);
               void submit(undefined, d.email);
             }}
-            className="group flex items-center justify-between rounded-[10px] border border-rule-strong bg-paper px-4 py-3 text-left transition-colors hover:border-ink disabled:opacity-60"
+            className="group flex items-center justify-between rounded-[10px] border border-line-strong bg-surface px-4 py-3 text-left transition-[border,background,box-shadow] hover:border-accent/60 hover:bg-raised hover:shadow-[var(--shadow-glow)] disabled:opacity-60"
           >
             <span>
-              <span className="block text-[14.5px] font-medium text-ink">Continue as {d.label}</span>
-              <span className="block text-[12.5px] text-ink-soft">{d.role}. {d.note}.</span>
+              <span className="block text-[14.5px] font-medium text-fg">Continue as {d.label}</span>
+              <span className="block text-[12.5px] text-fg-soft">{d.role}. {d.note}.</span>
             </span>
-            <span className="text-ink-faint transition-transform group-hover:translate-x-0.5" aria-hidden>›</span>
+            <span className="text-fg-faint transition-transform group-hover:translate-x-0.5" aria-hidden>›</span>
           </button>
         ))}
       </div>
 
-      <div className="flex items-center gap-3 text-[12px] text-ink-faint">
-        <span className="h-px flex-1 bg-rule" /> or sign in with email <span className="h-px flex-1 bg-rule" />
+      <div className="flex items-center gap-3 text-[12px] text-fg-faint">
+        <span className="h-px flex-1 bg-line" /> or sign in with email <span className="h-px flex-1 bg-line" />
       </div>
 
       <form onSubmit={(e) => void submit(e)} className="space-y-4" noValidate>

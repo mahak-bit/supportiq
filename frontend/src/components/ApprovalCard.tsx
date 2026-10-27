@@ -37,17 +37,17 @@ export function ApprovalCard({ approval, onDecided, showTicket }: { approval: Ap
   }
 
   return (
-    <article className={clsx("rounded-[10px] border bg-paper p-3.5", approval.status === "pending" ? "border-amber/35" : "border-rule")}>
+    <article className={clsx("rounded-[10px] border bg-surface p-3.5", approval.status === "pending" ? "border-amber/35" : "border-line")}>
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="text-[13.5px] font-medium text-ink">{approval.summary}</p>
+          <p className="text-[13.5px] font-medium text-fg">{approval.summary}</p>
           {showTicket && (
-            <Link href={`/app/inbox?t=${approval.ticket_id}`} className="mt-0.5 block truncate text-[12.5px] text-cobalt hover:underline">
+            <Link href={`/app/inbox?t=${approval.ticket_id}`} className="mt-0.5 block truncate text-[12.5px] text-accent hover:underline">
               #{approval.ticket_id} {approval.ticket_subject}
             </Link>
           )}
         </div>
-        {amount !== null && <span className="tabular shrink-0 font-display text-[1.05rem] text-ink">{money(amount)}</span>}
+        {amount !== null && <span className="tabular shrink-0 font-display text-[1.05rem] text-fg">{money(amount)}</span>}
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[12px]">
         <Badge tone={approval.status === "pending" ? "amber" : approval.status === "approved" ? "moss" : "neutral"}>
@@ -55,11 +55,11 @@ export function ApprovalCard({ approval, onDecided, showTicket }: { approval: Ap
         </Badge>
         {approval.required_role === "lead" && <Badge tone="ink">Team lead</Badge>}
         {rules.map((r) => <Badge key={r} tone="cobalt">{r}</Badge>)}
-        <span className="text-ink-faint">{relativeTime(approval.decided_at ?? approval.requested_at)}</span>
+        <span className="text-fg-faint">{relativeTime(approval.decided_at ?? approval.requested_at)}</span>
       </div>
-      {approval.decision_note && <p className="mt-2 text-[12.5px] text-ink-soft">Note: {approval.decision_note}</p>}
+      {approval.decision_note && <p className="mt-2 text-[12.5px] text-fg-soft">Note: {approval.decision_note}</p>}
       {approval.kind !== "send_reply" && approval.status === "pending" && (
-        <p className="mt-2 text-[12px] leading-snug text-ink-faint">Approving records the decision for your payment system. SupportIQ doesn’t move money.</p>
+        <p className="mt-2 text-[12px] leading-snug text-fg-faint">Approving records the decision for your payment system. SupportIQ doesn’t move money.</p>
       )}
       {approval.status === "pending" && (
         <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -69,7 +69,7 @@ export function ApprovalCard({ approval, onDecided, showTicket }: { approval: Ap
               <Button size="sm" icon={<X className="size-3.5" />} onClick={() => setRejecting(true)}>Reject</Button>
             </>
           ) : (
-            <span className="inline-flex items-center gap-1.5 text-[12.5px] text-ink-soft"><Lock className="size-3.5" aria-hidden /> Only a team lead can decide this</span>
+            <span className="inline-flex items-center gap-1.5 text-[12.5px] text-fg-soft"><Lock className="size-3.5" aria-hidden /> Only a team lead can decide this</span>
           )}
         </div>
       )}

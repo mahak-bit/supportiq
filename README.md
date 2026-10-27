@@ -160,12 +160,22 @@ supportiq/
         └── lib/                   # api.ts (client + hook), types.ts, format.ts (+ test)
 ```
 
-**Design system:** ivory paper `#F6F3EA`, blue-black ink `#171A2C`, one cobalt accent `#2448D8`; Source Serif 4 for display, Hanken Grotesk for UI. The 3D "support orbit" (React Three Fiber) is used only on the landing page, where it:
+**Design system:** near-black navy canvas `#060912`, raised surfaces `#0B1120`/`#121A2D`, one electric-blue accent `#5B8CFF` (fills `#2A62EC` carry white text at 5:1) with a restrained cyan `#3FD2EE`. Space Grotesk for headings, Inter for UI and body, Instrument Serif italic for one- or two-word editorial accents. Tokens (colours, fluid type scale, radii, shadows) live in `frontend/src/app/globals.css`; text colours are checked for at least 4.5:1 on both canvas and surface.
 
-- loads lazily with `ssr: false`,
+**Homepage intro:** a CSS 3D door sequence (`components/landing/Intro.tsx`, Framer Motion timeline). The brand emerges, a pair of panelled doors with real thickness swings open onto blue light, and the camera pushes through. It:
+
+- plays once per browser session, on the homepage only (a tiny head script decides before first paint, so repeat visits never flash it),
+- never plays under `prefers-reduced-motion`,
+- uses a shorter, flat version on phones, touch devices, low-core CPUs and Save-Data,
+- ends on the Skip button, Escape, scrolling or swiping,
+- is removed by a CSS failsafe after 7 s even if JavaScript never runs.
+
+The 3D "support orbit" (React Three Fiber) is used only on the landing page, where it:
+
+- loads lazily with `ssr: false`, and only after the intro has finished,
 - stops rendering when off-screen,
 - renders a single static frame under `prefers-reduced-motion`,
-- falls back to an SVG drawing when WebGL is unavailable.
+- falls back to an SVG drawing when WebGL is unavailable, on very small screens and with Save-Data.
 
 ---
 

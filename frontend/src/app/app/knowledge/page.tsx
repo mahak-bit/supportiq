@@ -27,8 +27,8 @@ export default function KnowledgePage() {
   return (
     <div className="scroll-quiet h-full overflow-y-auto">
       <div className="mx-auto max-w-[1180px] px-4 py-8 sm:px-8">
-        <h1 className="font-display text-[2rem] text-ink">Knowledge base</h1>
-        <p className="mt-1.5 max-w-2xl text-[15px] text-ink-soft">
+        <h1 className="font-display text-page text-fg">Knowledge base</h1>
+        <p className="mt-1.5 max-w-2xl text-[15px] text-fg-soft">
           Policies, product guides and FAQs the agent may quote. Each file is split into passages, embedded locally and
           searched on every draft. Replies can only cite what’s indexed here.
         </p>
@@ -101,14 +101,14 @@ function Uploader({ onUploaded, pollUntilDone }: { onUploaded: () => Promise<voi
         onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
         onDragLeave={() => setDrag(false)}
         onDrop={onDrop}
-        className={clsx("rounded-[var(--radius-panel)] border border-dashed p-6 text-center transition-colors", drag ? "border-cobalt bg-cobalt-wash/50" : "border-rule-strong bg-paper/70")}
+        className={clsx("rounded-[var(--radius-panel)] border border-dashed p-6 text-center transition-colors", drag ? "border-accent bg-accent-wash/50" : "border-line-strong bg-surface/70")}
       >
-        <FileUp className="mx-auto size-6 text-ink-faint" aria-hidden />
-        <p className="mt-2 text-[14px] text-ink">Drop a policy or product document here</p>
-        <p className="mt-0.5 text-[12.5px] text-ink-faint">PDF, Markdown or plain text, up to {MAX_MB} MB. Scanned PDFs without text can’t be read.</p>
+        <FileUp className="mx-auto size-6 text-fg-faint" aria-hidden />
+        <p className="mt-2 text-[14px] text-fg">Drop a policy or product document here</p>
+        <p className="mt-0.5 text-[12.5px] text-fg-faint">PDF, Markdown or plain text, up to {MAX_MB} MB. Scanned PDFs without text can’t be read.</p>
         <input ref={input} type="file" accept={ACCEPT.join(",")} className="sr-only" id="kb-upload" onChange={(e) => { const f = e.target.files?.[0]; if (f) void upload(f); }} />
         <Button className="mt-4" size="sm" variant="primary" loading={busy} onClick={() => input.current?.click()}>Choose a file</Button>
-        <p className="mt-3 text-[12px] text-ink-faint">Try <span className="text-ink-soft">sample-docs/gift-services.md</span> from the repository, then ask about engraving.</p>
+        <p className="mt-3 text-[12px] text-fg-faint">Try <span className="text-fg-soft">sample-docs/gift-services.md</span> from the repository, then ask about engraving.</p>
       </div>
       {error && <div className="mt-3"><ErrorState message={error} compact /></div>}
     </div>
@@ -120,17 +120,17 @@ function DocumentList({ docs, selected, onSelect }: { docs: ReturnType<typeof us
   if (!docs.data) return <div className="space-y-2">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-16" />)}</div>;
   if (!docs.data.length) return <EmptyState title="No documents yet" body="Upload your returns policy first. It answers the most tickets." />;
   return (
-    <ul className="divide-y divide-rule overflow-hidden rounded-[var(--radius-panel)] border border-rule bg-paper">
+    <ul className="edge-light divide-y divide-line overflow-hidden rounded-[var(--radius-panel)] border border-line bg-surface">
       {docs.data.map((d) => {
         const s = STATUS[d.status];
         return (
           <li key={d.id}>
             <button type="button" onClick={() => onSelect(d.id)} aria-pressed={selected === d.id}
-              className={clsx("flex w-full items-start gap-3 px-4 py-3 text-left transition-colors", selected === d.id ? "bg-cobalt-wash/40" : "hover:bg-ivory/60")}>
-              <FileText className="mt-0.5 size-4 shrink-0 text-ink-faint" aria-hidden />
+              className={clsx("flex w-full items-start gap-3 px-4 py-3 text-left transition-colors", selected === d.id ? "bg-accent-wash/40" : "hover:bg-raised/60")}>
+              <FileText className="mt-0.5 size-4 shrink-0 text-fg-faint" aria-hidden />
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-[14px] font-medium text-ink">{d.title}</span>
-                <span className="block truncate text-[12.5px] text-ink-faint">
+                <span className="block truncate text-[14px] font-medium text-fg">{d.title}</span>
+                <span className="block truncate text-[12.5px] text-fg-faint">
                   {d.filename}, {fileSize(d.size_bytes)}{d.status === "indexed" ? `, ${d.chunk_count} passages` : ""}, {d.source === "seed" ? "seeded" : `uploaded ${relativeTime(d.created_at)}`}
                 </span>
                 {d.status === "failed" && <span className="mt-1 block text-[12.5px] text-brick">{d.error}</span>}
@@ -167,15 +167,15 @@ function DocumentPreview({ id, onClose, onDeleted }: { id: number; onClose: () =
   }
 
   return (
-    <section aria-label="Document preview" className="rounded-[var(--radius-panel)] border border-rule bg-paper">
-      <div className="flex items-start justify-between gap-3 border-b border-rule px-5 py-4">
+    <section aria-label="Document preview" className="edge-light rounded-[var(--radius-panel)] border border-line bg-surface">
+      <div className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
         <div className="min-w-0">
-          <h2 className="font-display truncate text-xl text-ink">{d?.title ?? "Loading"}</h2>
-          {d && <p className="mt-0.5 text-[12.5px] text-ink-faint">{d.chunk_count} passages, embedded with {d.embedding_model || "—"}</p>}
+          <h2 className="font-display truncate text-xl text-fg">{d?.title ?? "Loading"}</h2>
+          {d && <p className="mt-0.5 text-[12.5px] text-fg-faint">{d.chunk_count} passages, embedded with {d.embedding_model || "—"}</p>}
         </div>
         <div className="flex shrink-0 gap-1">
           {user?.role === "lead" && d && <Button size="sm" variant="ghost" icon={<Trash2 className="size-3.5" />} onClick={() => setConfirm(true)}>Delete</Button>}
-          <button type="button" onClick={onClose} className="rounded-md p-1.5 text-ink-faint hover:bg-ivory-deep hover:text-ink" aria-label="Close preview"><X className="size-4" /></button>
+          <button type="button" onClick={onClose} className="rounded-md p-1.5 text-fg-faint hover:bg-well hover:text-fg" aria-label="Close preview"><X className="size-4" /></button>
         </div>
       </div>
       <div className="scroll-quiet max-h-[70vh] space-y-3 overflow-y-auto p-5">
@@ -183,14 +183,14 @@ function DocumentPreview({ id, onClose, onDeleted }: { id: number; onClose: () =
         {!d && !res.error && <Spinner />}
         {d?.status === "failed" && <ErrorState message={d.error} />}
         {d?.chunks.map((c) => (
-          <article key={c.id} className="rounded-[9px] border border-rule p-3">
-            <p className="mb-1.5 flex flex-wrap items-center gap-2 text-[12px] text-ink-faint">
+          <article key={c.id} className="rounded-[9px] border border-line p-3">
+            <p className="mb-1.5 flex flex-wrap items-center gap-2 text-[12px] text-fg-faint">
               <Badge tone="cobalt">{c.id}</Badge>{c.section && <span>{c.section}</span>}{c.page && <span>Page {c.page}</span>}
             </p>
-            <p className="text-[13.5px] leading-relaxed whitespace-pre-line text-ink-soft">{c.text}</p>
+            <p className="text-[13.5px] leading-relaxed whitespace-pre-line text-fg-soft">{c.text}</p>
           </article>
         ))}
-        {user?.role !== "lead" && d && <p className="text-[12px] text-ink-faint">Only team leads can delete documents.</p>}
+        {user?.role !== "lead" && d && <p className="text-[12px] text-fg-faint">Only team leads can delete documents.</p>}
       </div>
       <Dialog open={confirm} onClose={() => setConfirm(false)} title={`Delete “${d?.title ?? ""}”?`}
         description="Its passages are removed from search immediately. Drafts that already cite it keep their copy of the excerpt."
@@ -223,9 +223,9 @@ function AskPanel() {
   }
 
   return (
-    <section aria-label="Ask the knowledge base" className="rounded-[var(--radius-panel)] border border-rule bg-paper p-5">
+    <section aria-label="Ask the knowledge base" className="edge-light rounded-[var(--radius-panel)] border border-line bg-surface p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-display text-xl text-ink">{mode === "ask" ? "Ask a policy question" : "Search passages"}</h2>
+        <h2 className="font-display text-xl text-fg">{mode === "ask" ? "Ask a policy question" : "Search passages"}</h2>
         <Segmented label="Mode" size="sm" value={mode} onChange={(m) => { setMode(m); setError(""); }}
           options={[{ value: "ask", label: "Answer with sources" }, { value: "search", label: "Raw retrieval" }]} />
       </div>
@@ -235,7 +235,7 @@ function AskPanel() {
           placeholder={mode === "ask" ? "e.g. Can a customer return a final-sale item that arrived broken?" : "e.g. lost package"}
           onKeyDown={(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) void submit(e as unknown as FormEvent); }} />
         <div className="flex items-center justify-between">
-          <span className="text-[12px] text-ink-faint">Ctrl + Enter to submit</span>
+          <span className="text-[12px] text-fg-faint">Ctrl + Enter to submit</span>
           <Button type="submit" variant="primary" size="sm" loading={busy} disabled={q.trim().length < 3}
             icon={mode === "ask" ? <Sparkles className="size-3.5" /> : <Search className="size-3.5" />}>{mode === "ask" ? "Answer" : "Search"}</Button>
         </div>
@@ -243,33 +243,33 @@ function AskPanel() {
       {error && <div className="mt-4"><ErrorState message={error} compact /></div>}
 
       {mode === "ask" && answer && (
-        <div className="mt-6 space-y-4 border-t border-rule pt-5">
-          <p className="text-[15px] leading-relaxed whitespace-pre-line text-ink">{answer.answer}</p>
+        <div className="mt-6 space-y-4 border-t border-line pt-5">
+          <p className="text-[15px] leading-relaxed whitespace-pre-line text-fg">{answer.answer}</p>
           <ValidationReport validation={answer.validation} insufficient={answer.insufficient_evidence} />
           <CitationList citations={answer.citations} />
-          <p className="text-[12px] text-ink-faint">
+          <p className="text-[12px] text-fg-faint">
             {answer.provider === "extractive" ? "Extractive mode: sentences quoted from sources, no language model configured." : `Generated by ${answer.model}.`}{" "}
             {answer.retrieved.length} passages passed the relevance threshold.
           </p>
         </div>
       )}
       {mode === "search" && search && (
-        <div className="mt-6 space-y-2 border-t border-rule pt-5">
-          <p className="text-[12.5px] text-ink-faint">Passages below {Math.round(search.threshold * 100)}% similarity are never shown to the model.</p>
-          {search.results.length === 0 && <p className="text-[13px] text-ink-soft">No indexed passages yet.</p>}
+        <div className="mt-6 space-y-2 border-t border-line pt-5">
+          <p className="text-[12.5px] text-fg-faint">Passages below {Math.round(search.threshold * 100)}% similarity are never shown to the model.</p>
+          {search.results.length === 0 && <p className="text-[13px] text-fg-soft">No indexed passages yet.</p>}
           {search.results.map((p) => (
-            <article key={p.chunk_id} className={clsx("rounded-[9px] border p-3", p.above_threshold ? "border-rule" : "border-dashed border-rule opacity-60")}>
+            <article key={p.chunk_id} className={clsx("rounded-[9px] border p-3", p.above_threshold ? "border-line" : "border-dashed border-line opacity-60")}>
               <div className="mb-1 flex items-center justify-between gap-2 text-[12.5px]">
-                <span className="truncate font-medium text-ink">{p.document_title}{p.section ? `, ${p.section}` : ""}</span>
-                <span className="tabular shrink-0 text-ink-soft">{Math.round(p.score * 100)}%{p.above_threshold ? "" : ", below threshold"}</span>
+                <span className="truncate font-medium text-fg">{p.document_title}{p.section ? `, ${p.section}` : ""}</span>
+                <span className="tabular shrink-0 text-fg-soft">{Math.round(p.score * 100)}%{p.above_threshold ? "" : ", below threshold"}</span>
               </div>
-              <p className="line-clamp-4 text-[13px] leading-relaxed text-ink-soft">{p.text}</p>
+              <p className="line-clamp-4 text-[13px] leading-relaxed text-fg-soft">{p.text}</p>
             </article>
           ))}
         </div>
       )}
       {!answer && !search && (
-        <p className="mt-6 border-t border-rule pt-5 text-[13px] text-ink-soft">
+        <p className="mt-6 border-t border-line pt-5 text-[13px] text-fg-soft">
           Answers use the same retrieval, prompting and citation checks as ticket drafts, so this is a quick way to see what
           the agent would find.
         </p>

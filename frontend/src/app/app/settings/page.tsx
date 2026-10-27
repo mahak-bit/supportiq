@@ -32,8 +32,8 @@ export default function SettingsPage() {
   return (
     <div className="scroll-quiet h-full overflow-y-auto">
       <div className="mx-auto max-w-3xl px-4 py-8 sm:px-8">
-        <h1 className="font-display text-[2rem] text-ink">Settings</h1>
-        <p className="mt-1.5 text-[15px] text-ink-soft">
+        <h1 className="font-display text-page text-fg">Settings</h1>
+        <p className="mt-1.5 text-[15px] text-fg-soft">
           How this workspace is configured. Secrets live in the backend’s environment and are never shown here, only whether they are set.
         </p>
         {res.error ? (
@@ -56,12 +56,12 @@ export default function SettingsPage() {
               <Check ok={s.llm.ollama_reachable} label={`Ollama ${s.llm.ollama_reachable ? "is reachable" : "is not reachable"} (model ${s.llm.ollama_model})`} />
               <Row k="Timeout and retries" v={`${s.llm.timeout_seconds}s, up to ${s.llm.max_retries} retries`} />
               {!s.llm.is_llm && (
-                <div className="mt-4 rounded-[9px] bg-ivory p-4 text-[13.5px] leading-relaxed text-ink-soft">
-                  <p className="font-medium text-ink">Connect a model</p>
+                <div className="mt-4 rounded-[9px] bg-canvas p-4 text-[13.5px] leading-relaxed text-fg-soft">
+                  <p className="font-medium text-fg">Connect a model</p>
                   <ol className="mt-2 list-decimal space-y-1 pl-5">
                     <li>Create a key in Google AI Studio (Gemini has a free tier with rate limits; check current limits there).</li>
-                    <li>Add <code className="rounded bg-paper px-1">GEMINI_API_KEY=…</code> to <code className="rounded bg-paper px-1">backend/.env</code>.</li>
-                    <li>Restart the backend. Or install Ollama, run <code className="rounded bg-paper px-1">ollama pull llama3.2:3b</code>, and set <code className="rounded bg-paper px-1">LLM_PROVIDER=ollama</code>.</li>
+                    <li>Add <code className="rounded bg-surface px-1">GEMINI_API_KEY=…</code> to <code className="rounded bg-surface px-1">backend/.env</code>.</li>
+                    <li>Restart the backend. Or install Ollama, run <code className="rounded bg-surface px-1">ollama pull llama3.2:3b</code>, and set <code className="rounded bg-surface px-1">LLM_PROVIDER=ollama</code>.</li>
                   </ol>
                 </div>
               )}
@@ -74,12 +74,12 @@ export default function SettingsPage() {
               <Row k="Minimum similarity" v={`${Math.round(s.retrieval.min_score * 100)}%`} />
               <Row k="Chunk size and overlap" v={`${s.retrieval.chunk_size} / ${s.retrieval.chunk_overlap} characters`} />
               <div className="mt-4 flex flex-wrap items-center gap-3">
-                <Link href="/app/knowledge" className="text-[13.5px] text-cobalt hover:underline">Manage documents</Link>
+                <Link href="/app/knowledge" className="text-[13.5px] text-accent hover:underline">Manage documents</Link>
                 {user?.role === "lead" && (
                   <Button size="sm" icon={<RefreshCw className="size-3.5" />} loading={reindexing} onClick={() => void reindex()}>Re-embed all passages</Button>
                 )}
               </div>
-              {user?.role === "lead" && <p className="mt-2 text-[12px] text-ink-faint">Use after changing EMBEDDING_MODEL. Passages from other models are excluded from search until re-embedded.</p>}
+              {user?.role === "lead" && <p className="mt-2 text-[12px] text-fg-faint">Use after changing EMBEDDING_MODEL. Passages from other models are excluded from search until re-embedded.</p>}
             </Card>
 
             <Card title="Storage">
@@ -99,9 +99,9 @@ export default function SettingsPage() {
 
 function Card({ title, badge, children }: { title: string; badge?: ReactNode; children: ReactNode }) {
   return (
-    <section className="rounded-[var(--radius-panel)] border border-rule bg-paper p-5">
-      <div className="mb-3 flex items-center justify-between gap-3"><h2 className="font-display text-lg text-ink">{title}</h2>{badge}</div>
-      <dl className="divide-y divide-rule">{children}</dl>
+    <section className="edge-light rounded-[var(--radius-panel)] border border-line bg-surface p-5">
+      <div className="mb-3 flex items-center justify-between gap-3"><h2 className="font-display text-lg text-fg">{title}</h2>{badge}</div>
+      <dl className="divide-y divide-line">{children}</dl>
     </section>
   );
 }
@@ -109,8 +109,8 @@ function Card({ title, badge, children }: { title: string; badge?: ReactNode; ch
 function Row({ k, v }: { k: string; v: string }) {
   return (
     <div className="grid gap-1 py-2 text-[13.5px] sm:grid-cols-[12rem_1fr]">
-      <dt className="text-ink-soft">{k}</dt>
-      <dd className="break-words text-ink">{v}</dd>
+      <dt className="text-fg-soft">{k}</dt>
+      <dd className="break-words text-fg">{v}</dd>
     </div>
   );
 }
@@ -119,8 +119,8 @@ function Check({ ok, label }: { ok: boolean; label: string }) {
   const Icon = ok ? CheckCircle2 : CircleDashed;
   return (
     <div className="flex items-center gap-2 py-2 text-[13.5px]">
-      <Icon className={clsx("size-4", ok ? "text-moss" : "text-ink-faint")} aria-hidden />
-      <span className="text-ink">{label}</span>
+      <Icon className={clsx("size-4", ok ? "text-moss" : "text-fg-faint")} aria-hidden />
+      <span className="text-fg">{label}</span>
     </div>
   );
 }

@@ -27,7 +27,7 @@ export function ContextPanel({ ticket, onChanged }: { ticket: TicketDetail; onCh
         {ticket.latest_run ? (
           <AgentTimeline run={ticket.latest_run} />
         ) : (
-          <p className="text-[13px] text-ink-faint">The agent hasn’t run on this ticket yet. Use “Run agent” to classify it, check the order and rules, and draft a reply.</p>
+          <p className="text-[13px] text-fg-faint">The agent hasn’t run on this ticket yet. Use “Run agent” to classify it, check the order and rules, and draft a reply.</p>
         )}
       </section>
 
@@ -36,8 +36,8 @@ export function ContextPanel({ ticket, onChanged }: { ticket: TicketDetail; onCh
         <div className="flex items-center gap-3">
           <Avatar name={c.name} />
           <div className="min-w-0">
-            <p className="truncate text-[14px] font-medium text-ink">{c.name}</p>
-            <p className="truncate text-[12.5px] text-ink-soft">{c.email}</p>
+            <p className="truncate text-[14px] font-medium text-fg">{c.name}</p>
+            <p className="truncate text-[12.5px] text-fg-soft">{c.email}</p>
           </div>
         </div>
         <div className="mt-3 flex flex-wrap gap-1.5">
@@ -45,28 +45,28 @@ export function ContextPanel({ ticket, onChanged }: { ticket: TicketDetail; onCh
           <Badge><MapPin className="size-3" aria-hidden />{c.country}</Badge>
           {c.is_synthetic && <Badge tone="amber">Synthetic</Badge>}
         </div>
-        {c.note && <p className="mt-2 text-[12.5px] text-ink-soft">{c.note}</p>}
+        {c.note && <p className="mt-2 text-[12.5px] text-fg-soft">{c.note}</p>}
       </section>
 
       <section aria-labelledby="orders-title">
         <SectionTitle id="orders-title">Orders</SectionTitle>
         {c.orders.length === 0 ? (
-          <p className="text-[13px] text-ink-faint">No orders on file.</p>
+          <p className="text-[13px] text-fg-faint">No orders on file.</p>
         ) : (
           <ul className="space-y-2">
             {c.orders.map((o) => (
-              <li key={o.id} className={clsx("rounded-[9px] border bg-paper p-3 text-[12.5px]", o.id === ticket.order_id ? "border-cobalt/40" : "border-rule")}>
+              <li key={o.id} className={clsx("rounded-[9px] border bg-surface p-3 text-[12.5px]", o.id === ticket.order_id ? "border-accent/40" : "border-line")}>
                 <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5 font-medium text-ink"><Package className="size-3.5 text-ink-faint" aria-hidden />{o.id}</span>
-                  <span className="tabular text-ink">{money(o.total_cents, o.currency)}</span>
+                  <span className="flex items-center gap-1.5 font-medium text-fg"><Package className="size-3.5 text-fg-faint" aria-hidden />{o.id}</span>
+                  <span className="tabular text-fg">{money(o.total_cents, o.currency)}</span>
                 </div>
-                <p className="mt-1 text-ink-soft">
+                <p className="mt-1 text-fg-soft">
                   {humanize(o.status)}. Placed {shortDate(o.placed_at)}{o.delivered_at ? `, delivered ${shortDate(o.delivered_at)}` : ""}.
                 </p>
-                <p className="mt-1 text-ink-faint">
+                <p className="mt-1 text-fg-faint">
                   {o.items.map((i) => i.name + (i.final_sale ? " (final sale)" : "")).join(", ")}
                 </p>
-                {o.id === ticket.order_id && <p className="mt-1.5 text-[11.5px] font-medium text-cobalt">Linked to this ticket</p>}
+                {o.id === ticket.order_id && <p className="mt-1.5 text-[11.5px] font-medium text-accent">Linked to this ticket</p>}
               </li>
             ))}
           </ul>
@@ -76,13 +76,13 @@ export function ContextPanel({ ticket, onChanged }: { ticket: TicketDetail; onCh
       <section aria-labelledby="hist-title">
         <SectionTitle id="hist-title">Previous tickets</SectionTitle>
         {c.previous_tickets.length === 0 ? (
-          <p className="text-[13px] text-ink-faint">First conversation with this customer.</p>
+          <p className="text-[13px] text-fg-faint">First conversation with this customer.</p>
         ) : (
           <ul className="space-y-1">
             {c.previous_tickets.slice(0, 5).map((t) => (
               <li key={t.id}>
-                <Link href={`/app/inbox?t=${t.id}&status=all`} className="flex items-center justify-between gap-2 rounded-[7px] px-2 py-1.5 text-[13px] hover:bg-ivory-deep">
-                  <span className="truncate text-ink">{t.subject}</span>
+                <Link href={`/app/inbox?t=${t.id}&status=all`} className="flex items-center justify-between gap-2 rounded-[7px] px-2 py-1.5 text-[13px] hover:bg-well">
+                  <span className="truncate text-fg">{t.subject}</span>
                   <StatusBadge status={t.status} />
                 </Link>
               </li>

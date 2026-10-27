@@ -22,22 +22,29 @@ import {
 /* ---------------------------------------------------------------- wordmark */
 
 export function OrbitMark({ className, size = 22 }: { className?: string; size?: number }) {
-  // The brand mark: a question (ink dot) held in orbit by evidence (cobalt ring + bead).
+  // The brand mark: a question (bright core) held in orbit by evidence (blue ring + cyan bead).
+  const id = useId();
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden className={className}>
-      <ellipse cx="12" cy="12" rx="10.5" ry="5.2" transform="rotate(-28 12 12)" fill="none" stroke="var(--color-cobalt)" strokeWidth="1.6" />
-      <circle cx="12" cy="12" r="4.2" fill="var(--color-ink)" />
-      <circle cx="20.6" cy="7.6" r="1.9" fill="var(--color-cobalt)" />
+      <defs>
+        <radialGradient id={`${id}-c`} cx="38%" cy="34%" r="70%">
+          <stop offset="0" stopColor="#ffffff" />
+          <stop offset="1" stopColor="#9db8ff" />
+        </radialGradient>
+      </defs>
+      <ellipse cx="12" cy="12" rx="10.5" ry="5.2" transform="rotate(-28 12 12)" fill="none" stroke="var(--color-accent)" strokeWidth="1.6" />
+      <circle cx="12" cy="12" r="4.2" fill={`url(#${id}-c)`} />
+      <circle cx="20.6" cy="7.6" r="1.9" fill="var(--color-cyan)" />
     </svg>
   );
 }
 
 export function Wordmark({ href = "/", className }: { href?: string; className?: string }) {
   return (
-    <Link href={href} className={clsx("inline-flex items-center gap-2 text-ink", className)} aria-label="SupportIQ home">
+    <Link href={href} className={clsx("inline-flex items-center gap-2 text-fg", className)} aria-label="SupportIQ home">
       <OrbitMark />
-      <span className="font-display text-[1.32rem] leading-none font-semibold">
-        Support<span className="font-normal italic text-cobalt">iq</span>
+      <span className="font-display text-[1.2rem] leading-none font-semibold tracking-[-0.03em]">
+        Support<span className="text-accent">IQ</span>
       </span>
     </Link>
   );
@@ -49,11 +56,11 @@ type Variant = "primary" | "secondary" | "ghost" | "danger" | "quiet";
 type Size = "sm" | "md" | "lg";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-ink text-paper hover:bg-cobalt-deep active:translate-y-px shadow-[0_1px_0_rgb(255_255_255/0.12)_inset]",
-  secondary: "bg-paper text-ink border border-rule-strong hover:border-ink-faint hover:bg-white active:translate-y-px",
-  ghost: "text-ink-soft hover:text-ink hover:bg-ivory-deep",
-  danger: "bg-paper text-brick border border-brick/30 hover:bg-brick-wash",
-  quiet: "text-cobalt hover:text-cobalt-deep underline-offset-4 hover:underline px-0!",
+  primary: "bg-accent-fill text-on-accent hover:bg-[#3a70f6] hover:shadow-[var(--shadow-glow)] active:translate-y-px active:scale-[0.99] shadow-[inset_0_1px_0_rgb(255_255_255/0.22),0_6px_20px_-10px_rgb(42_98_236/0.8)]",
+  secondary: "bg-raised text-fg border border-line-strong hover:border-fg-faint hover:bg-[#18223a] active:translate-y-px",
+  ghost: "text-fg-soft hover:text-fg hover:bg-well",
+  danger: "bg-surface text-brick border border-brick/30 hover:bg-brick-wash",
+  quiet: "text-accent hover:text-accent-bright underline-offset-4 hover:underline px-0!",
 };
 const sizes: Record<Size, string> = { sm: "h-8 px-3 text-[13px] gap-1.5", md: "h-9.5 px-4 text-sm gap-2", lg: "h-12 px-6 text-[15px] gap-2" };
 
@@ -93,7 +100,7 @@ export function ButtonLink({ href, variant = "primary", size = "md", className, 
   href: string; variant?: Variant; size?: Size; className?: string; children: ReactNode;
 }) {
   return (
-    <Link href={href} className={clsx("inline-flex items-center justify-center rounded-[var(--radius-control)] font-medium transition-colors", variants[variant], sizes[size], className)}>
+    <Link href={href} className={clsx("inline-flex items-center justify-center rounded-[var(--radius-control)] font-medium whitespace-nowrap transition-[background,color,border,box-shadow,transform] duration-200", variants[variant], sizes[size], className)}>
       {children}
     </Link>
   );
@@ -102,12 +109,12 @@ export function ButtonLink({ href, variant = "primary", size = "md", className, 
 /* ---------------------------------------------------------------- badges */
 
 const tones = {
-  neutral: "bg-ivory-deep text-ink-soft",
-  cobalt: "bg-cobalt-wash text-cobalt-deep",
+  neutral: "bg-well text-fg-soft",
+  cobalt: "bg-accent-wash text-accent-bright",
   moss: "bg-moss-wash text-moss",
   amber: "bg-amber-wash text-amber",
   brick: "bg-brick-wash text-brick",
-  ink: "bg-ink text-paper",
+  ink: "bg-fg text-surface",
 } as const;
 export type BadgeTone = keyof typeof tones;
 
@@ -129,15 +136,15 @@ export function StatusBadge({ status }: { status: string }) {
 /** Priority is encoded as a filled bar count, so it reads at a glance without colour alone. */
 export function PriorityMark({ priority, withLabel = false }: { priority: string; withLabel?: boolean }) {
   const level = { low: 1, normal: 2, high: 3, urgent: 4 }[priority] ?? 2;
-  const color = level === 4 ? "bg-brick" : level === 3 ? "bg-amber" : "bg-ink-faint";
+  const color = level === 4 ? "bg-brick" : level === 3 ? "bg-amber" : "bg-fg-faint";
   return (
     <span className="inline-flex items-center gap-1.5" title={`${priority} priority`}>
       <span className="inline-flex items-end gap-[2px]" aria-hidden>
         {[1, 2, 3, 4].map((i) => (
-          <span key={i} className={clsx("w-[3px] rounded-[1px]", i <= level ? color : "bg-rule")} style={{ height: 4 + i * 2 }} />
+          <span key={i} className={clsx("w-[3px] rounded-[1px]", i <= level ? color : "bg-line")} style={{ height: 4 + i * 2 }} />
         ))}
       </span>
-      <span className={clsx(withLabel ? "text-[13px] text-ink-soft capitalize" : "sr-only")}>{priority} priority</span>
+      <span className={clsx(withLabel ? "text-[13px] text-fg-soft capitalize" : "sr-only")}>{priority} priority</span>
     </span>
   );
 }
@@ -150,8 +157,8 @@ export function Avatar({ name, className }: { name: string; className?: string }
   return (
     <span
       aria-hidden
-      className={clsx("inline-grid size-9 shrink-0 place-items-center rounded-full font-display text-[13px] font-semibold text-ink", className)}
-      style={{ background: `oklch(0.9 0.045 ${h})`, boxShadow: `inset 0 0 0 1px oklch(0.8 0.06 ${h})` }}
+      className={clsx("inline-grid size-9 shrink-0 place-items-center rounded-full font-display text-[13px] font-semibold text-fg", className)}
+      style={{ background: `oklch(0.33 0.07 ${h})`, boxShadow: `inset 0 0 0 1px oklch(0.46 0.09 ${h})` }}
     >
       {letters}
     </span>
@@ -163,14 +170,14 @@ export function Avatar({ name, className }: { name: string; className?: string }
 export function Field({ label, hint, error, children, htmlFor }: { label: string; hint?: string; error?: string; children: ReactNode; htmlFor: string }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={htmlFor} className="block text-[13px] font-medium text-ink">{label}</label>
+      <label htmlFor={htmlFor} className="block text-[13px] font-medium text-fg">{label}</label>
       {children}
-      {error ? <p className="text-[13px] text-brick" role="alert">{error}</p> : hint ? <p className="text-[12.5px] text-ink-faint">{hint}</p> : null}
+      {error ? <p className="text-[13px] text-brick" role="alert">{error}</p> : hint ? <p className="text-[12.5px] text-fg-faint">{hint}</p> : null}
     </div>
   );
 }
 
-const inputBase = "w-full rounded-[var(--radius-control)] border border-rule-strong bg-paper px-3 text-[14px] text-ink placeholder:text-ink-faint transition-colors hover:border-ink-faint focus:border-cobalt focus:outline-none focus-visible:outline-2";
+const inputBase = "w-full rounded-[var(--radius-control)] border border-line-strong bg-well px-3 text-[14px] text-fg placeholder:text-fg-faint transition-[border,box-shadow] hover:border-fg-faint focus:border-accent focus:shadow-[0_0_0_3px_rgb(91_140_255/0.18)] focus:outline-none";
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(function Input({ className, ...rest }, ref) {
   return <input ref={ref} className={clsx(inputBase, "h-9.5", className)} {...rest} />;
@@ -184,7 +191,7 @@ export function Segmented<T extends string>({ value, options, onChange, label, s
   value: T; options: { value: T; label: string }[]; onChange: (v: T) => void; label: string; size?: "sm" | "md";
 }) {
   return (
-    <div role="radiogroup" aria-label={label} className="inline-flex rounded-[var(--radius-control)] border border-rule bg-ivory-deep/70 p-0.5">
+    <div role="radiogroup" aria-label={label} className="inline-flex rounded-[var(--radius-control)] border border-line bg-well/70 p-0.5">
       {options.map((o) => {
         const active = o.value === value;
         return (
@@ -197,10 +204,10 @@ export function Segmented<T extends string>({ value, options, onChange, label, s
             className={clsx(
               "relative rounded-[5px] font-medium transition-colors",
               size === "sm" ? "h-7 px-2.5 text-[12.5px]" : "h-8 px-3 text-[13px]",
-              active ? "text-ink" : "text-ink-soft hover:text-ink",
+              active ? "text-fg" : "text-fg-soft hover:text-fg",
             )}
           >
-            {active && <motion.span layoutId={`seg-${label}`} className="absolute inset-0 rounded-[5px] bg-paper shadow-[var(--shadow-lift)]" transition={{ type: "spring", stiffness: 500, damping: 38 }} />}
+            {active && <motion.span layoutId={`seg-${label}`} className="absolute inset-0 rounded-[5px] bg-raised shadow-[var(--shadow-lift)] ring-1 ring-line-strong" transition={{ type: "spring", stiffness: 500, damping: 38 }} />}
             <span className="relative">{o.label}</span>
           </button>
         );
@@ -213,22 +220,22 @@ export function Segmented<T extends string>({ value, options, onChange, label, s
 
 export function Spinner({ label = "Loading" }: { label?: string }) {
   return (
-    <span role="status" className="inline-flex items-center gap-2 text-sm text-ink-soft">
+    <span role="status" className="inline-flex items-center gap-2 text-sm text-fg-soft">
       <Loader2 className="size-4 animate-spin" aria-hidden /> {label}
     </span>
   );
 }
 
 export function Skeleton({ className }: { className?: string }) {
-  return <span aria-hidden className={clsx("block animate-pulse rounded-md bg-ivory-deep", className)} />;
+  return <span aria-hidden className={clsx("shimmer block rounded-md", className)} />;
 }
 
 export function EmptyState({ title, body, action, icon }: { title: string; body?: ReactNode; action?: ReactNode; icon?: ReactNode }) {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-14 text-center">
-      <div className="mb-4 grid size-12 place-items-center rounded-full border border-rule bg-paper text-ink-faint">{icon ?? <Inbox className="size-5" aria-hidden />}</div>
-      <p className="font-display text-lg text-ink">{title}</p>
-      {body && <div className="mt-1.5 max-w-sm text-sm text-ink-soft">{body}</div>}
+      <div className="mb-4 grid size-12 place-items-center rounded-full border border-line-strong bg-raised text-accent shadow-[0_0_30px_-8px_rgb(91_140_255/0.5)]">{icon ?? <Inbox className="size-5" aria-hidden />}</div>
+      <p className="font-display text-lg text-fg">{title}</p>
+      {body && <div className="mt-1.5 max-w-sm text-sm text-fg-soft">{body}</div>}
       {action && <div className="mt-5">{action}</div>}
     </div>
   );
@@ -236,7 +243,7 @@ export function EmptyState({ title, body, action, icon }: { title: string; body?
 
 export function ErrorState({ message, onRetry, compact }: { message: string; onRetry?: () => void; compact?: boolean }) {
   return (
-    <div role="alert" className={clsx("flex items-start gap-3 rounded-[var(--radius-panel)] border border-brick/25 bg-brick-wash/60 text-sm text-ink", compact ? "p-3" : "p-4")}>
+    <div role="alert" className={clsx("flex items-start gap-3 rounded-[var(--radius-panel)] border border-brick/25 bg-brick-wash/60 text-sm text-fg", compact ? "p-3" : "p-4")}>
       <AlertTriangle className="mt-0.5 size-4 shrink-0 text-brick" aria-hidden />
       <div className="flex-1">
         <p>{message}</p>
@@ -281,7 +288,7 @@ export function Dialog({ open, onClose, title, description, children, footer }: 
     <AnimatePresence>
       {open && (
         <div className="fixed inset-0 z-50 grid place-items-end sm:place-items-center sm:p-6">
-          <motion.div className="absolute inset-0 bg-ink/35" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} />
+          <motion.div className="absolute inset-0 bg-scrim/70 backdrop-blur-[3px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} />
           <motion.div
             ref={ref}
             role="dialog"
@@ -292,13 +299,13 @@ export function Dialog({ open, onClose, title, description, children, footer }: 
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.18 }}
-            className="relative w-full max-w-lg rounded-t-[16px] border border-rule bg-paper p-6 shadow-[var(--shadow-float)] sm:rounded-[var(--radius-panel)]"
+            className="relative w-full max-w-lg rounded-t-[16px] border border-line-strong bg-raised p-6 shadow-[var(--shadow-float)] sm:rounded-[var(--radius-panel)]"
           >
-            <button type="button" onClick={onClose} aria-label="Close dialog" className="absolute top-4 right-4 rounded-md p-1 text-ink-faint hover:bg-ivory-deep hover:text-ink">
+            <button type="button" onClick={onClose} aria-label="Close dialog" className="absolute top-4 right-4 rounded-md p-1 text-fg-faint hover:bg-well hover:text-fg">
               <X className="size-4" />
             </button>
-            <h2 id={`${id}-t`} className="font-display pr-8 text-xl text-ink">{title}</h2>
-            {description && <p id={`${id}-d`} className="mt-1.5 text-sm text-ink-soft">{description}</p>}
+            <h2 id={`${id}-t`} className="font-display pr-8 text-xl text-fg">{title}</h2>
+            {description && <p id={`${id}-d`} className="mt-1.5 text-sm text-fg-soft">{description}</p>}
             {children && <div className="mt-5">{children}</div>}
             {footer && <div className="mt-6 flex flex-wrap justify-end gap-2">{footer}</div>}
           </motion.div>
@@ -334,7 +341,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               exit={{ opacity: 0, x: 24 }}
               className={clsx(
                 "pointer-events-auto max-w-sm rounded-[10px] px-4 py-3 text-sm shadow-[var(--shadow-float)]",
-                t.tone === "error" ? "bg-brick text-paper" : "bg-ink text-paper",
+                t.tone === "error" ? "border border-brick/35 bg-brick-wash text-brick" : "glass border border-line-strong text-fg",
               )}
             >
               {t.text}
@@ -351,13 +358,13 @@ export const useToast = () => useContext(ToastCtx);
 /* ---------------------------------------------------------------- misc */
 
 export function Kbd({ children }: { children: ReactNode }) {
-  return <kbd className="inline-grid h-5 min-w-5 place-items-center rounded border border-rule-strong bg-paper px-1 font-sans text-[11px] text-ink-soft shadow-[0_1px_0_var(--color-rule-strong)]">{children}</kbd>;
+  return <kbd className="inline-grid h-5 min-w-5 place-items-center rounded border border-line-strong bg-surface px-1 font-sans text-[11px] text-fg-soft shadow-[0_1px_0_var(--color-line-strong)]">{children}</kbd>;
 }
 
 export function SectionTitle({ children, action, id }: { children: ReactNode; action?: ReactNode; id?: string }) {
   return (
     <div className="mb-3 flex items-center justify-between gap-3">
-      <h2 id={id} className="text-[13px] font-semibold text-ink">{children}</h2>
+      <h2 id={id} className="text-[13px] font-semibold text-fg">{children}</h2>
       {action}
     </div>
   );
@@ -365,7 +372,7 @@ export function SectionTitle({ children, action, id }: { children: ReactNode; ac
 
 export function SampleDataNote({ children }: { children: ReactNode }) {
   return (
-    <p className="inline-flex items-center gap-2 rounded-full border border-dashed border-rule-strong bg-paper/70 px-3 py-1 text-[12.5px] text-ink-soft">
+    <p className="inline-flex items-center gap-2 rounded-full border border-dashed border-line-strong bg-surface/70 px-3 py-1 text-[12.5px] text-fg-soft">
       <span className="size-1.5 rounded-full bg-amber" aria-hidden /> {children}
     </p>
   );

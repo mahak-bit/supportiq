@@ -21,8 +21,8 @@ export default function ApprovalsPage() {
   return (
     <div className="scroll-quiet h-full overflow-y-auto">
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-8">
-        <h1 className="font-display text-[2rem] text-ink">Approvals</h1>
-        <p className="mt-1.5 max-w-2xl text-[15px] text-ink-soft">
+        <h1 className="font-display text-page text-fg">Approvals</h1>
+        <p className="mt-1.5 max-w-2xl text-[15px] text-fg-soft">
           Everything the agent proposed that changes something for a customer waits here for a person. Refunds above $300,
           policy exceptions and escalated replies need a team lead{user?.role === "lead" ? ", which is you" : ""}.
         </p>
@@ -42,10 +42,10 @@ export default function ApprovalsPage() {
             <div className="grid gap-8 lg:grid-cols-2">
               {[{ title: "Team lead", list: forLead }, { title: "Any agent", list: forAgent }].map((g) => (
                 <section key={g.title} aria-label={g.title}>
-                  <h2 className="mb-3 text-[13px] font-semibold text-ink">{g.title} <span className="font-normal text-ink-faint tabular">{g.list.length}</span></h2>
+                  <h2 className="mb-3 text-[13px] font-semibold text-fg">{g.title} <span className="font-normal text-fg-faint tabular">{g.list.length}</span></h2>
                   <div className="space-y-2">
                     {g.list.length ? g.list.map((a) => <ApprovalCard key={a.id} approval={a} showTicket onDecided={() => res.reload()} />)
-                      : <p className="text-[13px] text-ink-faint">None.</p>}
+                      : <p className="text-[13px] text-fg-faint">None.</p>}
                   </div>
                 </section>
               ))}

@@ -4,19 +4,44 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
-/* The support orbit: an ink sphere (the customer's question) held by tilted rings of
-   evidence. Beads travel the rings; one cobalt bead per ring marks a cited passage.
+/* The support orbit: a dark glass core (the customer's question) held by tilted rings of
+   evidence. Beads travel the rings; one cyan bead per ring marks a cited passage.
    Pointer/touch tilts the sculpture. Everything is procedural: no assets to download. */
 
-const INK = new THREE.Color("#1f2442");
-const COBALT = new THREE.Color("#2448d8");
-const IVORY = new THREE.Color("#efe7d4");
+const CORE = new THREE.Color("#0c1428");
+const ACCENT = new THREE.Color("#5b8cff");
+const CYAN = new THREE.Color("#3fd2ee");
+const BEAD = new THREE.Color("#7f9ad6");
 
 const RINGS = [
   { r: 1.75, tilt: [0.95, 0.15, 0.2], speed: 0.16, beads: 7 },
   { r: 2.25, tilt: [1.35, -0.55, 0.0], speed: -0.11, beads: 9 },
   { r: 2.75, tilt: [0.55, 0.75, -0.35], speed: 0.07, beads: 11 },
 ] as const;
+
+// Fresnel rim: brightest where the surface turns away from the camera, like light wrapping glass.
+const rimMaterial = () =>
+  new THREE.ShaderMaterial({
+    uniforms: { uColor: { value: ACCENT }, uPower: { value: 2.6 } },
+    vertexShader: /* glsl */ `
+      varying vec3 vNormal; varying vec3 vView;
+      void main() {
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        vNormal = normalize(normalMatrix * normal);
+        vView = normalize(-mv.xyz);
+        gl_Position = projectionMatrix * mv;
+      }`,
+    fragmentShader: /* glsl */ `
+      uniform vec3 uColor; uniform float uPower;
+      varying vec3 vNormal; varying vec3 vView;
+      void main() {
+        float f = pow(1.0 - max(dot(vNormal, vView), 0.0), uPower);
+        gl_FragColor = vec4(uColor * f * 1.6, f);
+      }`,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
 
 function Ring({ r, tilt, speed, beads, animate }: (typeof RINGS)[number] & { animate: boolean }) {
   const group = useRef<THREE.Group>(null);
@@ -27,16 +52,16 @@ function Ring({ r, tilt, speed, beads, animate }: (typeof RINGS)[number] & { ani
   return (
     <group rotation={tilt as unknown as [number, number, number]}>
       <mesh>
-        <torusGeometry args={[r, 0.006, 8, 220]} />
-        <meshBasicMaterial color={COBALT} transparent opacity={0.45} />
+        <torusGeometry args={[r, 0.007, 8, 240]} />
+        <meshBasicMaterial color={ACCENT} transparent opacity={0.55} toneMapped={false} />
       </mesh>
       <group ref={group}>
         {offsets.map((a, i) => {
           const cited = i === 0;
           return (
             <mesh key={i} position={[Math.cos(a) * r, Math.sin(a) * r, 0]}>
-              <sphereGeometry args={[cited ? 0.085 : 0.05, 24, 24]} />
-              <meshStandardMaterial color={cited ? COBALT : IVORY} roughness={0.35} metalness={cited ? 0.2 : 0} emissive={cited ? COBALT : INK} emissiveIntensity={cited ? 0.35 : 0} />
+              <sphereGeometry args={[cited ? 0.085 : 0.045, 20, 20]} />
+              <meshBasicMaterial color={cited ? CYAN : BEAD} toneMapped={false} transparent opacity={cited ? 1 : 0.8} />
             </mesh>
           );
         })}
@@ -45,9 +70,36 @@ function Ring({ r, tilt, speed, beads, animate }: (typeof RINGS)[number] & { ani
   );
 }
 
+function Dust({ animate }: { animate: boolean }) {
+  const ref = useRef<THREE.Points>(null);
+  const geometry = useMemo(() => {
+    const n = 220;
+    const pos = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) {
+      // Deterministic spread so server and client agree and nothing reshuffles on re-render.
+      const t = i * 2.399963;
+      const y = 1 - (i / (n - 1)) * 2;
+      const rad = Math.sqrt(1 - y * y) * (3.4 + ((i * 37) % 17) / 10);
+      pos.set([Math.cos(t) * rad, y * 3.2, Math.sin(t) * rad], i * 3);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    return g;
+  }, []);
+  useFrame((_, dt) => {
+    if (animate && ref.current) ref.current.rotation.y += dt * 0.02;
+  });
+  return (
+    <points ref={ref} geometry={geometry}>
+      <pointsMaterial size={0.02} color="#9db8ff" transparent opacity={0.5} sizeAttenuation depthWrite={false} />
+    </points>
+  );
+}
+
 function Sculpture({ animate }: { animate: boolean }) {
   const root = useRef<THREE.Group>(null);
   const core = useRef<THREE.Mesh>(null);
+  const rim = useMemo(rimMaterial, []);
   const { pointer, viewport } = useThree();
   const compact = viewport.width < 5;
 
@@ -68,11 +120,15 @@ function Sculpture({ animate }: { animate: boolean }) {
     <group ref={root} scale={compact ? 0.78 : 1}>
       <mesh ref={core}>
         <sphereGeometry args={[1.05, 96, 96]} />
-        <meshPhysicalMaterial color={INK} roughness={0.28} metalness={0.15} clearcoat={1} clearcoatRoughness={0.18} />
+        <meshPhysicalMaterial color={CORE} roughness={0.22} metalness={0.35} clearcoat={1} clearcoatRoughness={0.12} emissive={ACCENT} emissiveIntensity={0.06} />
+      </mesh>
+      <mesh scale={1.14} material={rim}>
+        <sphereGeometry args={[1.05, 64, 64]} />
       </mesh>
       {RINGS.map((ring, i) => (
         <Ring key={i} {...ring} animate={animate} />
       ))}
+      <Dust animate={animate} />
     </group>
   );
 }
@@ -105,10 +161,10 @@ export default function OrbitScene() {
         gl={{ antialias: true, alpha: true, powerPreference: "low-power" }}
         style={{ touchAction: "pan-y" }}
       >
-        <ambientLight intensity={0.55} color="#fff4e2" />
-        <directionalLight position={[4, 5, 6]} intensity={2.1} color="#fff1dc" />
-        <directionalLight position={[-6, -2, -4]} intensity={1.4} color="#5b7bff" />
-        <pointLight position={[0, 0, 3.5]} intensity={0.6} color="#ffffff" />
+        <ambientLight intensity={0.25} color="#9db8ff" />
+        <directionalLight position={[4, 5, 6]} intensity={1.6} color="#dbe6ff" />
+        <directionalLight position={[-6, -2, -4]} intensity={2.2} color="#2a62ec" />
+        <pointLight position={[0, 0, 3.5]} intensity={0.8} color="#3fd2ee" />
         <Sculpture animate={!reduced} />
       </Canvas>
     </div>

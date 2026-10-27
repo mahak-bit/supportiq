@@ -108,19 +108,19 @@ export function DraftComposer({ ticket, onChanged }: { ticket: TicketDetail; onC
   const extractive = draft?.provider === "extractive";
 
   return (
-    <section aria-label="Reply" className="rounded-[var(--radius-panel)] border border-rule bg-paper shadow-[var(--shadow-lift)]">
-      <div className="flex items-center justify-between gap-2 border-b border-rule px-3 py-2">
+    <section aria-label="Reply" className="edge-light rounded-[var(--radius-panel)] border border-line bg-surface shadow-[var(--shadow-lift)]">
+      <div className="flex items-center justify-between gap-2 border-b border-line px-3 py-2">
         <div role="tablist" aria-label="Composer mode" className="flex gap-1">
           {(["reply", "note"] as const).map((m) => (
             <button key={m} role="tab" type="button" aria-selected={mode === m} onClick={() => setMode(m)}
-              className={clsx("inline-flex h-8 items-center gap-1.5 rounded-[6px] px-3 text-[13px] whitespace-nowrap", mode === m ? "bg-ivory-deep font-medium text-ink" : "text-ink-soft hover:text-ink")}>
+              className={clsx("inline-flex h-8 items-center gap-1.5 rounded-[6px] px-3 text-[13px] whitespace-nowrap", mode === m ? "bg-well font-medium text-fg" : "text-fg-soft hover:text-fg")}>
               {m === "reply" ? <Sparkles className="size-3.5" aria-hidden /> : <StickyNote className="size-3.5" aria-hidden />}
               {m === "reply" ? "Suggested reply" : "Internal note"}
             </button>
           ))}
         </div>
         {mode === "reply" && draft && (
-          <span className="hidden truncate text-[12px] text-ink-faint 2xl:inline">Drafted {relativeTime(draft.created_at)} by {extractive ? "extractive mode" : draft.model}</span>
+          <span className="hidden truncate text-[12px] text-fg-faint 2xl:inline">Drafted {relativeTime(draft.created_at)} by {extractive ? "extractive mode" : draft.model}</span>
         )}
       </div>
 
@@ -145,20 +145,20 @@ export function DraftComposer({ ticket, onChanged }: { ticket: TicketDetail; onC
             onChange={(e) => setGuidance(e.target.value)}
             maxLength={500}
             placeholder="Optional guidance, e.g. “offer the replacement first”"
-            className="h-8.5 w-full rounded-[6px] border border-rule bg-ivory/50 px-3 text-[13px] placeholder:text-ink-faint focus:border-cobalt focus:outline-none"
+            className="h-8.5 w-full rounded-[6px] border border-line bg-canvas/50 px-3 text-[13px] placeholder:text-fg-faint focus:border-accent focus:outline-none"
           />
           {error && <ErrorState message={error} onRetry={() => void generate()} compact />}
 
           {draft ? (
             <>
               {extractive && (
-                <p className="rounded-[8px] bg-ivory-deep px-3 py-2 text-[12.5px] text-ink-soft">
+                <p className="rounded-[8px] bg-well px-3 py-2 text-[12.5px] text-fg-soft">
                   No language model is configured, so this draft quotes sentences from the sources and verified records directly.
                   Add a Gemini key or run Ollama for written replies (see Settings).
                 </p>
               )}
               <div>
-                <label htmlFor="draft-body" className="mb-1.5 flex items-center justify-between text-[12.5px] text-ink-faint">
+                <label htmlFor="draft-body" className="mb-1.5 flex items-center justify-between text-[12.5px] text-fg-faint">
                   <span>Edit before approving</span>
                   {edited && <Badge tone="cobalt">Edited</Badge>}
                 </label>
@@ -167,17 +167,17 @@ export function DraftComposer({ ticket, onChanged }: { ticket: TicketDetail; onC
               <ValidationReport validation={draft.validation} insufficient={draft.insufficient_evidence} />
               {draft.citations.length > 0 && (
                 <div>
-                  <p className="mb-2 text-[12.5px] font-medium text-ink">Sources behind this draft</p>
+                  <p className="mb-2 text-[12.5px] font-medium text-fg">Sources behind this draft</p>
                   <CitationList citations={draft.citations} />
                 </div>
               )}
-              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-rule pt-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-4">
                 <div className="flex gap-1">
                   <Button size="sm" variant="ghost" icon={<Copy className="size-3.5" />} onClick={() => void navigator.clipboard.writeText(body).then(() => toast("Copied to clipboard"))}>Copy</Button>
                   <Button size="sm" variant="ghost" icon={<Trash2 className="size-3.5" />} loading={busy === "discard"} onClick={() => void discard()}>Discard</Button>
                 </div>
                 <div className="flex items-center gap-2">
-                  {blocked && <span className="inline-flex items-center gap-1 text-[12px] text-ink-soft"><Lock className="size-3" aria-hidden /> Needs a team lead</span>}
+                  {blocked && <span className="inline-flex items-center gap-1 text-[12px] text-fg-soft"><Lock className="size-3" aria-hidden /> Needs a team lead</span>}
                   <Button variant="primary" icon={<Check className="size-4" />} disabled={blocked || !body.trim() || resolved} onClick={() => setConfirm(true)}>
                     Approve and send
                   </Button>
@@ -185,7 +185,7 @@ export function DraftComposer({ ticket, onChanged }: { ticket: TicketDetail; onC
               </div>
             </>
           ) : (
-            <p className="py-6 text-center text-[13.5px] text-ink-soft">
+            <p className="py-6 text-center text-[13.5px] text-fg-soft">
               {resolved ? "This ticket is resolved. Reopen it to reply." : "Draft a grounded reply, or run the agent to also check the order and business rules."}
             </p>
           )}
@@ -204,7 +204,7 @@ export function DraftComposer({ ticket, onChanged }: { ticket: TicketDetail; onC
           </>
         }
       >
-        <p className="scroll-quiet max-h-48 overflow-auto rounded-[8px] bg-ivory p-3 text-[13.5px] leading-relaxed whitespace-pre-line text-ink">{body}</p>
+        <p className="scroll-quiet max-h-48 overflow-auto rounded-[8px] bg-canvas p-3 text-[13.5px] leading-relaxed whitespace-pre-line text-fg">{body}</p>
       </Dialog>
     </section>
   );
